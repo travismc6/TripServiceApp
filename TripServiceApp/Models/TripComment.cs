@@ -10,7 +10,6 @@ namespace TripServiceApp.Models
     public class TripComment
     {
         [Key]
-
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 
         public int Id { get; set; }
