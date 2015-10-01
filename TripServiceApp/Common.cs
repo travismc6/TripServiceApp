@@ -10,6 +10,19 @@ namespace TripServiceApp
 {
     public  class Common
     {
+        public static string WebsiteDomain = "teambitewolf.azurewebsites.net";
+
+        private static string TwilioAccountSid = "ACbd60880fa81a594ce582f938d0716b8b";
+        private static string TwilioAuthToken = "403c9bd50b0d252176ab553d4031ddd2";
+        private static string TwilioFromNumber = "+18666578771";
+
+        public static void SendSms(string recipient, string message)
+        {
+            var twilio = new Twilio.TwilioRestClient(TwilioAccountSid, TwilioAuthToken);
+            twilio.SendSmsMessage(TwilioFromNumber, CleanPhoneNumber(recipient), message, null, (msg) => { });            
+        }
+
+
         public async static Task<bool> SendGms(string notifyId, string tripUserId, string tripId, string titleText, string contentText, string type, string tripCode = null, 
             string userCode = null, string tripUserName = null, string tripDisplayName = null, string extras = null)
         {
@@ -50,6 +63,11 @@ namespace TripServiceApp
             }
 
             return success;
+        }
+
+        private static string CleanPhoneNumber(string phone)
+        {
+            return phone.Replace(" ", String.Empty).Replace("-", String.Empty).Replace("#", "").Replace("(", "").Replace(")", "");
         }
     }
 }

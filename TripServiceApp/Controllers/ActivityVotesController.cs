@@ -71,8 +71,6 @@ namespace TripServiceApp.Controllers
                 }
             }
 
-
-
             return CreatedAtRoute("DefaultApi", new { id = activityVote.Id }, activityVote);
         }
 

@@ -26,12 +26,6 @@ namespace TripServiceApp.Controllers
             return db.TripUsers;
         }
 
-        private string CleanPhoneNumber(string phone)
-        {
-            return phone.Replace(" ", String.Empty).Replace("-", String.Empty).Replace("#", "").Replace("(", "").Replace(")", "");
-        }
-
-
         // Put: api/Trips/UserCode
         [ResponseType(typeof(void))]
         [HttpGet]
@@ -44,15 +38,10 @@ namespace TripServiceApp.Controllers
 
             foreach(var tu in tripUsers)
             {
-                string AccountSid = "ACbd60880fa81a594ce582f938d0716b8b";
-                string AuthToken = "403c9bd50b0d252176ab553d4031ddd2";
-                var twilio = new Twilio.TwilioRestClient(AccountSid, AuthToken);
-
                 var message = "Your Tripsie code is " + tu.TripCode;
                 message += "\nteambitewolf.azurewebsites.net/Detail/" + tu.TripCode;
 
-                twilio.SendSmsMessage("+18666578771", CleanPhoneNumber(tu.Phone), message, null, (msg) => { }); 
-            }
+                Common.SendSms(tu.Phone, message);            }
 
             return StatusCode(HttpStatusCode.OK);
         }
