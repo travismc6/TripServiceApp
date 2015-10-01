@@ -37,8 +37,6 @@ namespace TripServiceApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            
-
             Trip trip = db.Trips.FirstOrDefault(r => r.Id == id);
             trip.StartDate = start.Replace('-', '/');
 
@@ -140,8 +138,6 @@ namespace TripServiceApp.Controllers
 
             return Ok(trip);
         }
-
-
 
         // GET: api/Trips/UserCode
         [ResponseType(typeof(Trip))]
