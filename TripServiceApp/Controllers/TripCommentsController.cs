@@ -101,10 +101,6 @@ namespace TripServiceApp.Controllers
 
             foreach (var tu in db.TripUsers.Where(r => r.TripId == tripUser.TripId))
             {
-                string AccountSid = "ACbd60880fa81a594ce582f938d0716b8b";
-                string AuthToken = "403c9bd50b0d252176ab553d4031ddd2";
-                var twilio = new Twilio.TwilioRestClient(AccountSid, AuthToken);
-
                 var message = tripUser.DisplayName + " posted a new ";
 
                 if (tripComment.TripActivityId != null && tripComment.TripActivityId > 0)
@@ -119,19 +115,15 @@ namespace TripServiceApp.Controllers
                     message += "\ntripsieappweb.azurewebsites.net/Trip/Comments/" + tu.TripCode;
                 }
 
+                // @TODO: check sms setting or if notified via android
 
                 if (tu.Phone != null)
                 {
-                    twilio.SendSmsMessage("+18666578771", CleanPhoneNumber(tu.Phone), message, null, (msg) => { });
+                    Common.SendSms(tu.Phone, message);
                 }
             }
 
             return CreatedAtRoute("DefaultApi", new { id = tripComment.Id }, tripComment);
-        }
-
-        private string CleanPhoneNumber(string phone)
-        {
-            return phone.Replace(" ", String.Empty).Replace("-", String.Empty).Replace("#", "").Replace("(", "").Replace(")", "");
         }
 
         // DELETE: api/TripComments/5

@@ -166,11 +166,6 @@ namespace TripServiceApp.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        private string CleanPhoneNumber(string phone)
-        {
-            return phone.Replace(" ", String.Empty).Replace("-", String.Empty).Replace("#", "").Replace("(", "").Replace(")", "");
-        }
-
         // POST: api/TripActivities
         [ResponseType(typeof(TripActivity))]
         public IHttpActionResult PostTripActivity(TripActivity tripActivity)
@@ -204,16 +199,13 @@ namespace TripServiceApp.Controllers
 
             foreach (var tu in db.TripUsers.Where(r => r.TripId == tripActivity.TripId))
             {
-                string AccountSid = "ACbd60880fa81a594ce582f938d0716b8b";
-                string AuthToken = "403c9bd50b0d252176ab553d4031ddd2";
-                var twilio = new Twilio.TwilioRestClient(AccountSid, AuthToken);
 
                 var message = tripUser.DisplayName + " suggested a new Activity for your trip to " + tripUser.Trip.Destination + "!";
                 message += "\ntripsieappweb.azurewebsites.net/Trip/ActivityDetails/" + tripActivity.Id + "/" + "?code=" + tu.TripCode;
 
                 if (tu.Phone != null)
                 {
-                    twilio.SendSmsMessage("+18666578771", CleanPhoneNumber(tu.Phone), message, null, (msg) => { });
+                    Common.SendSms(tu.Phone, message);
                 }
                 
             }

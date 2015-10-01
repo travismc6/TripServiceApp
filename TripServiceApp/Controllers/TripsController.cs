@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.Http.Description;
@@ -243,6 +244,25 @@ namespace TripServiceApp.Controllers
 
             db.Trips.Add(trip);
             db.SaveChanges();
+
+            var website = "teambitewolf.azurewebsites.net/Detail/";
+
+            // send out text invite
+            var smsMessage1 = String.Format("Let's Tripsie! {0} send you an invite for a Trip to {1}", trip.MyName, trip.Destination);
+
+            var smsMessage2 =
+                "Visit " + Common.WebsiteDomain + "/Detail/{0} or download the Tripsie app for Android to get started!";
+
+            foreach (var tu in trip.Users)
+            {
+                if (tu.Phone != null)
+                {
+                    // @TODO don't send second message until first one complete
+                    Common.SendSms(tu.Phone, smsMessage1);
+                    Common.SendSms(tu.Phone, string.Format(smsMessage2, tu.TripCode));
+                }
+            }
+
 
             return CreatedAtRoute("DefaultApi", new { id = trip.Id }, trip);
         }
