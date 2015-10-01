@@ -140,8 +140,6 @@ namespace TripServiceApp.Controllers
             return Ok(trip);
         }
 
-
-
         // GET: api/Trips/UserCode
         [ResponseType(typeof(Trip))]
         [Route("api/UserCode/{id}")]
